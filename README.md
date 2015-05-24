@@ -1,7 +1,8 @@
 RSimple Framework
 =====================
 
-
+This is framework for wordpress theme options including metabox and post type. 
+This framework not finish yet and this is actually for personal but you can use for your production or anything you want. 
 
 ### RSimple Metabox
 
