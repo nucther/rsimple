@@ -1,0 +1,154 @@
+.send-right{
+	float: right;
+}
+
+.rsimple{
+	margin-top: 25px;	
+}
+
+.rsimple .header{
+	display: block;
+	background: #0a0a0a;
+	min-height: 60px;
+	padding: 20px;	
+	color: #fafafa;
+}
+.rsimple .header h1{
+	margin:0;
+	padding: 0;	
+	line-height: 60px;
+}
+.rsimple .contents{
+	background: #f5f5f5;	
+	border:1px solid #dedede;
+}
+
+.rsimple .content{
+	display: block;
+	margin-left: 200px;
+	background: #fff;
+	min-height: 300px;
+	border-left: 1px solid #dedede;
+	z-index: 10;
+	position: relative;		
+}
+.rsimple .rsimple_fields{	
+	display: block;
+	clear: both;
+	border-top: 1px solid #dedede;
+	padding: 8px 10px;	
+}
+.rsimple .rsimple_fields .fields_left{
+	display: block;
+	width: 25%;
+	float: left;
+}
+.rsimple .rsimple_fields .fields_right{
+	display: block;
+	width: 73%;
+	float: left;
+	padding-left: 2%;
+}
+.rsimple .rsimple_fields .clearfix{
+	clear: both;
+	display: block;
+}
+
+.rsimple_fields .title{
+	font-weight: bold;
+	font-size: 13px;
+}
+.rsimple_fields small{
+	display: block;
+	font-size: 11px;
+	margin-top: 5px;
+}
+.rsimple_fields .desc{
+	clear: both;
+	display: block;
+}
+
+/** Menu **/
+.rsimple .menu{
+	position: absolute;	
+	margin: 0;
+	padding: 0;
+}
+
+.rsimple .menu ul{
+	margin:0;
+	padding: 0;
+	list-style: none;
+	width: 200px;
+	border-top: 1px solid #e7e7e7;
+}
+.rsimple .menu ul li a{
+	display: block;
+	padding: 10px 10px;
+	color: #555;
+	text-decoration: none;
+	border-bottom: 1px solid #e7e7e7;	
+	font-weight: bold;
+	line-height: 20px;	
+}
+.rsimple .menu ul li a:hover{
+	background: #e0e0e0;
+}
+.rsimple .menu ul li.active a{
+	background: #fff;
+	color: #000;
+}
+.rsimple .menu ul li span{
+	margin-left: 30px;
+}
+.rsimple .menu ul li i{
+	font-size: 20px;		
+	position: absolute;
+}
+
+.rsimple .control{
+	display: block;
+	height: 30px;
+	border: 1px solid #e7e7e7;
+	border-left: 1px solid #dedede;	
+	border-right: 1px solid #dedede;
+	background: #eeeeee;
+	padding: 5px 15px;
+}
+
+.rsimple .message{
+	height: 30px;
+	background: green;
+	line-height: 30px;
+	padding: 0 20px;
+	color: #fff;
+	display: none;
+}
+
+.rsimple .message.errors{
+	background: red;
+}
+
+@media screen and (max-width: 768px ){
+	.rsimple .menu ul{
+		width: 50px;
+	}
+	.rsimple .menu ul li span{
+		display: none;
+	}
+
+	.rsimple .content{
+		margin-left: 50px;
+	}
+
+	.rsimple .content .fields_left{
+		clear: both;
+		width: 100%;
+	}
+	.rsimple .content .fields_right{
+		margin-top: 25px;
+		clear: both;
+		width: 100%;
+		padding-left: 0;
+	}
+}

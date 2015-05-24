@@ -1,0 +1,5 @@
+<?php
+/**
+ * Fix Theme check 
+ */
+

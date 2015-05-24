@@ -1,0 +1,19 @@
+.rsimple-image_select ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.rsimple-image_select ul li{
+	float: left;
+	margin: 0 10px;
+}
+
+.rsimple-image_select ul li input[type="radio"]{
+	display: none;
+}
+
+.rsimple-image_select ul li .image_checked{
+border:2px solid #0073aa;
+	display: block;
+}

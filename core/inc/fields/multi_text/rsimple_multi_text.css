@@ -1,0 +1,16 @@
+.rsimple-multi_text .text{
+	display: block;
+	margin:5px 0;
+}
+
+.rsimple-multi_text input{
+	width: 50%;
+}
+
+.rsimple-multi_text .remove{
+	cursor: pointer;
+}
+
+.rsimple-multi_text .remove:hover{
+	color: red;
+}
