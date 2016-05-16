@@ -1,13 +1,13 @@
 <?php
 /**
- * Rsimple Metabox 
+ * Rsimple Metabox
  */
 
 class rsimple_metabox{
-	public $args; 
+	public $args;
 	public $metaargs;
 
-	public function set( $args ){		
+	public function __construct( $args ){
 		$this->metaargs = wp_parse_args($args, $this->__args() );
 		//print_r($this->metaargs);
 		$this->meta_action();
@@ -15,7 +15,7 @@ class rsimple_metabox{
 
 	/**
 	 * Default Args
-	 * @return array 
+	 * @return array
 	 */
 	private function __args(){
 		$args = array(
@@ -28,10 +28,10 @@ class rsimple_metabox{
 			);
 
 		return $args;
-	}	
+	}
 
 	/**
-	 * Add to WP action	 
+	 * Add to WP action
 	 */
 	private function meta_action(){
 		add_action('admin_init',array($this,'meta_execute'));
@@ -40,19 +40,19 @@ class rsimple_metabox{
 	}
 
 	/**
-	 * Execute what we can execute	 
+	 * Execute what we can execute
 	 */
-	public function meta_execute(){		
+	public function meta_execute(){
 		foreach((array)$this->metaargs['target'] as $context){
 			add_meta_box( $this->metaargs['id'], $this->metaargs['title'], array($this, 'meta_display'), $context, $this->metaargs['context'], $this->metaargs['priority'], $this->metaargs );
 		}
 	}
 
 	/**
-	 * Display content 
-	 * @param  array $post 
-	 * @param  array $args 
-	 * @return html       
+	 * Display content
+	 * @param  array $post
+	 * @param  array $args
+	 * @return html
 	 */
 	public function meta_display( $post, $args){
 		//echo get_post_type( $post->ID );
@@ -60,7 +60,7 @@ class rsimple_metabox{
 		?>
 		<div class="rsimple metabox">
 			<div class="content">
-		<?php		
+		<?php
 		new rsimple_metafields($args['args']);
 		?>
 			</div>
@@ -70,7 +70,7 @@ class rsimple_metabox{
 
 	/**
 	 * Save metabox fields
-	 * @param  string $post_id 
+	 * @param  string $post_id
 	 * @return [type]          [description]
 	 */
 	public function save( $post_id ){
@@ -80,15 +80,15 @@ class rsimple_metabox{
 			return $post_id;
 
 		if( isset($post->ID) ){
-			foreach($this->metaargs['fields'] as $field){				
-				if(isset( $_POST[ $this->metaargs['id'] ][ $field['id'] ] ) ) {				
+			foreach($this->metaargs['fields'] as $field){
+				if(isset( $_POST[ $this->metaargs['id'] ][ $field['id'] ] ) ) {
 					update_post_meta($post_id, $field['id'], ( $_POST[ $this->metaargs['id'] ][ $field['id'] ] ) );
 				}
 			}
 		}
 	}
 
-	
+
 	public  function get_args_val($name){
 		return $this->args['option_name'];
 	}
@@ -100,7 +100,7 @@ class rsimple_metabox{
 		wp_enqueue_style('metabox-style', rsimple_framework::$__url .'assets/css/metabox-style.css');
 		wp_enqueue_script('metabox-style', rsimple_framework::$__url .'assets/js/rsimple-metabox.js');
 
-		foreach((array)$this->metaargs['fields'] as $field){	
+		foreach((array)$this->metaargs['fields'] as $field){
 			$field = wp_parse_args($field, $this->__default_field());
 			$class = 'rsimple_'. $field['type'];
 
@@ -108,7 +108,7 @@ class rsimple_metabox{
 				$field = new $class($field);
 				$field->enqueue();
 			}
-		}		
+		}
 	}
 
 
@@ -119,7 +119,7 @@ class rsimple_metabox{
 
 		return wp_parse_args(rsimple_framework::__default_field(), $default);
 	}
-	
+
 }
 
 
@@ -137,10 +137,10 @@ class rsimple_metafields extends rsimple_metabox{
 
 		foreach( (array)$this->fields['fields'] as $field){
 			$field = wp_parse_args($field, $this->__default_field());
-			
+
 			$class = '';
 
-			$field['name'] = $this->fields['id'].'['. $field['id'] .']';				
+			$field['name'] = $this->fields['id'].'['. $field['id'] .']';
 			$className = 'rsimple_'. $field['type'];
 
 			if($this->fields['build']){
@@ -149,10 +149,10 @@ class rsimple_metafields extends rsimple_metabox{
 				$value = get_metadata('post', $post->ID, $field['id'], true);
 			}
 
-			if( $field['target'] !=='' ){				
+			if( $field['target'] !=='' ){
 				$class = 'rsimple-condition-page rsimple-'. $field['target'];
 			}
-			
+
 			//echo $class;
 			?>
 			<div class="rsimple_fields <?php echo $class; ?>" data-type="<?php echo $field['type']; ?>">

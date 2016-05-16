@@ -10,7 +10,10 @@ class rsimple_wp extends rsimple_framework{
 	public function __construct(){		
 		$this->remove_unused_wp();		
 	}
-	
+	public function run($args){
+		$this->queues = $args;
+		$this->action();
+	}
 	/**
 	 * Remove unused wp 	 
 	 */

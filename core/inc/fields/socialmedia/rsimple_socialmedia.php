@@ -11,7 +11,7 @@ class rsimple_socialmedia{
 		$this->value = $value;
 	}
 
-	public function display(){		
+	public function display(){
 		$default = array(
 			'facebook' => '',
 			'twitter' => '',
@@ -20,7 +20,8 @@ class rsimple_socialmedia{
 			'googleplus' => '',
 			'pinterest' => '',
 			'youtube' => '',
-			'flickr' => ''
+			'flickr' => '',
+			'instagram' => '',
 			);
 
 		$values = wp_parse_args( $this->value, $default);
@@ -68,10 +69,15 @@ class rsimple_socialmedia{
 						<input type="text" name="<?php echo $this->fieldArgs['name']; ?>[flickr]" value="<?php echo $values['flickr']; ?>">
 						<small class="desc">Please enter full link including http:// or https:// to your account</small>
 					</div>					
+					<div class="form">
+						<label>Instagram</label>
+						<input type="text" name="<?php echo $this->fieldArgs['name']; ?>[instagram]" value="<?php echo $values['instagram']; ?>">
+						<small class="desc">Please enter full link including http:// or https:// to your account</small>
+					</div>
 				</div>
 			</div>
 		</div>
-		<?php		
+		<?php
 	}
 
 	public function enqueue(){
