@@ -1,6 +1,6 @@
 <?php
 /**
- * Rsimple Framework 
+ * Rsimple Framework
  */
 
 if( !defined('ABSPATH'))
@@ -11,30 +11,33 @@ if( !class_exists('rsimple_framework') ){
 
 	class rsimple_framework{
 		public $args = array();
-		public static $__url; 
+		public static $__url;
 		public static $__path;
-		
+
 		public function __construct( $args=array()){
-			$this->__cleaning();			
+			$this->__cleaning();
 
 			$this->args = wp_parse_args( $args, $this->__default_args() );
 
 			$this->generateUrl();
 
 			//Load component we needed
-			$this->load_component();			
-			
-			//Set action to wp
-			$this->action();		
+			$this->load_component();
 
-			// Send result to global 
+			//Set action to wp
+			$this->action();
+
+			//temporary plugins
+			$this->plugins();
+
+			// Send result to global
 			$this->send_result();
 		}
 
 
 		/**
 		 * Default args
-		 * @return array 
+		 * @return array
 		 */
 		public function __default_args(){
 			$args = array(
@@ -58,14 +61,14 @@ if( !class_exists('rsimple_framework') ){
 				'dev_mode' => true,
 
 
-			);	
-			
+			);
+
 			return $args;
 		}
 
 		/**
 		 * Default Sections
-		 * @return array 
+		 * @return array
 		 */
 		public function __default_section(){
 			$args = array(
@@ -79,7 +82,7 @@ if( !class_exists('rsimple_framework') ){
 
 		/**
 		 * Default Fields
-		 * @return array 
+		 * @return array
 		 */
 		public static function __default_field(){
 			$args = array(
@@ -94,20 +97,49 @@ if( !class_exists('rsimple_framework') ){
 				return $args;
 		}
 
+		/**
+		 * Default Custom Post args
+		 * @return array
+		 */
+		private function __defaultCustomPost(){
+			$args = array(
+				'name' => null,
+				'title' => null,
+				'capability' => false,
+				'override' => array()
+			);
+			return $args;
+		}
+
+		private function __defaultCustomTax(){
+			$args = array(
+				'name' => null,
+				'title' => null,
+				'posttype' => 'post',
+				'override' => array()
+			);
+			return $args;
+		}
+		/**
+		 * Clear args
+		 * @return array
+		 */
 		private function __cleaning(){
-			$this->args=array();			
+			$this->args=array();
 		}
 
 		/**
-		 * Loading all component needed		 
+		 * Loading all component needed
 		 */
-		private function load_component(){	
+		private function load_component(){
 
 			include_once(dirname(__FILE__) .'/inc/class-fields.php');
 			include_once(dirname(__FILE__) .'/inc/class-display.php');
 			include_once(dirname(__FILE__) .'/inc/class-wp.php');
 			include_once(dirname(__FILE__) .'/inc/class-metabox.php');
 			//include_once(dirname(__FILE__) .'/inc/class-themecheck.php');
+			include_once(dirname(__FILE__) .'/inc/class-post-type.php');
+			include_once(dirname(__FILE__) .'/inc/class-taxonomy.php');
 			//
 			$this->load_fields();
 		}
@@ -135,30 +167,30 @@ if( !class_exists('rsimple_framework') ){
 
 		/**
 		 * Display content
-		 * @return html 
+		 * @return html
 		 */
-		public function display(){		
+		public function display(){
 			new rsimple_display($this->args);
 		}
 
 		public function generateUrl(){
 
 			self::$__url = get_template_directory_uri(). $this->clearPath( dirname(__FILE__));
-			self::$__path = get_template_directory(). $this->clearPath( dirname(__FILE__));						
+			self::$__path = get_template_directory(). $this->clearPath( dirname(__FILE__));
 		}
 
 		/**
 		 * Crear path
-		 * @param  string $path 
-		 * @return string       
+		 * @param  string $path
+		 * @return string
 		 */
 		public function clearPath($path){
-			$wpdir = str_replace('\\', '/', get_template_directory() );		
+			$wpdir = str_replace('\\', '/', get_template_directory() );
 			return trailingslashit( str_replace( $wpdir, '', str_replace('\\', '/', $path) ) );
 		}
 
 		/**
-		 * Load style or script		 
+		 * Load style or script
 		 */
 		public function __enqueue(){
 			//load wp media and font-awsome
@@ -167,15 +199,15 @@ if( !class_exists('rsimple_framework') ){
 
 			//Load default panel style and script
 			wp_enqueue_style('panel-style', self::$__url .'assets/css/style.css');
-			wp_enqueue_script('panel-script', self::$__url .'assets/js/rsimple.js');			
-			
+			wp_enqueue_script('panel-script', self::$__url .'assets/js/rsimple.js');
+
 			//Load panel enqueue
-			//if(isset($_REQUEST['page']) && $_REQUEST['page'] == $this->args['option_name']){				
-				if(isset($this->args['sections'])):				
+			//if(isset($_REQUEST['page']) && $_REQUEST['page'] == $this->args['option_name']){
+				if(isset($this->args['sections'])):
 
 					foreach((array)$this->args['sections'] as $section){
-						
-						foreach((array)$section['fields'] as $field){	
+
+						foreach((array)$section['fields'] as $field){
 							$field = wp_parse_args($field, $this->__default_field());
 
 							$class = 'rsimple_'. $field['type'];
@@ -185,7 +217,7 @@ if( !class_exists('rsimple_framework') ){
 								$field = new $class($field);
 								$field->enqueue();
 							}
-								
+
 						}
 						$section;
 					}
@@ -195,8 +227,8 @@ if( !class_exists('rsimple_framework') ){
 
 		/**
 		 * Get Option Name
-		 * @param  string $name 
-		 * @return string       
+		 * @param  string $name
+		 * @return string
 		 */
 		public  function get_args_val($name){
 			return $this->args['option_name'];
@@ -204,8 +236,8 @@ if( !class_exists('rsimple_framework') ){
 
 		private function load_fields(){
 			//$this->generateUrl();
-			$fields_dir = self::$__path .'inc/fields';	
-			
+			$fields_dir = self::$__path .'inc/fields';
+
 			if(is_dir($fields_dir)):
 				$files = scandir( $fields_dir );
 
@@ -220,16 +252,16 @@ if( !class_exists('rsimple_framework') ){
 				}
 			endif;
 		}
-		
+
 		/**
 		 * Get panel value from wp option
-		 * @param  string $field   
-		 * @param  string $default 
-		 * @return string          
+		 * @param  string $field
+		 * @param  string $default
+		 * @return string
 		 */
 		public function get_value($field, $default=''){
 			//print_r($this->args);
-			$values = get_option( $this->args['option_name'] );	
+			$values = get_option( $this->args['option_name'] );
 
 			if(isset($values[$field]))
 				return $values[$field];
@@ -239,7 +271,7 @@ if( !class_exists('rsimple_framework') ){
 		}
 
 		/**
-		 * Set global value with name option name		 
+		 * Set global value with name option name
 		 */
 		public function send_result(){
 			$result = get_option( $this->args['option_name']);
@@ -248,22 +280,22 @@ if( !class_exists('rsimple_framework') ){
 
 		/**
 		 * Save Update
-		 * @return json 
+		 * @return json
 		 */
 		public function save_update(){
 			if(!wp_verify_nonce( $_POST['nonce-security'],'security')){
 				$result = array('status' => false);
-			} else{				
+			} else{
 				$rsimple_value = array();
 				foreach($this->args['sections'] as $section){
-					foreach($section['fields'] as $field){						
-						if(  isset($_POST[ $this->args['option_name'] ][ $field['id'] ])  ){						
+					foreach($section['fields'] as $field){
+						if(  isset($_POST[ $this->args['option_name'] ][ $field['id'] ])  ){
 							$rsimple_value[ $field['id'] ] =  (!is_array( $_POST[ $this->args['option_name'] ] [ $field['id'] ] ) ) ? stripslashes( $_POST[ $this->args['option_name'] ] [ $field['id'] ] ) : $_POST[ $this->args['option_name'] ] [ $field['id'] ];
 						}
 					}
 				}
 
-				update_option( $this->args['option_name'], $rsimple_value);			
+				update_option( $this->args['option_name'], $rsimple_value);
 				$result = array('status' => true);
 			}
 			//print_r($this->args);
@@ -273,8 +305,8 @@ if( !class_exists('rsimple_framework') ){
 
 		/**
 		 * Load new classes
-		 * @param  string $class 
-		 * @return any        
+		 * @param  string $class
+		 * @return any
 		 */
 		public function object( $class ){
 			$classes = 'rsimple_'. $class;
@@ -282,6 +314,35 @@ if( !class_exists('rsimple_framework') ){
 			if( class_exists($classes) )
 				return new $classes;
 		}
-		
+
+		/**
+		* Action
+		**/
+		public function plugins(){
+			foreach($this->args as $key => $args){
+				if($key =='wp_config'){
+					$wp = $this->object('wp');
+					$wp->run($args);
+				}
+
+				if($key == 'custompost'){
+					foreach($args as $cp){
+						$cp = wp_parse_args($cp, $this->__defaultCustomPost);
+						$pt = $this->object('posttype');
+						$pt->publish($cp['name'], $cp['title'],$cp['capability'], $cp['override']);
+					}
+				}
+
+				if($key == 'taxonomy'){
+					foreach($args as $ct){
+						$ct = wp_parse_args($ct, $this->__defaultCustomTax());
+						$tax = $this->object('taxonomy');
+						$tax->publish($ct['posttype'], $ct['name'], $ct['title'], $ct['override']);
+					}
+				}
+
+			}
+		}
+
 	}
-} 
+}

@@ -6,14 +6,14 @@
 class rsimple_media{
 	public $fieldArgs;
 
-	public function __construct( $args = array(), $value = ''){		
+	public function __construct( $args = array(), $value = ''){
 		$this->fieldArgs = $args;
 		$this->value = $value;
 	}
 
 	public function display(){
 		$imgID = $this->value;
-				
+
 		if(!empty($imgID['id'])){
 			$img = wp_get_attachment_image_src( $imgID['id'], 'thumbnail', true);
 			$imgfull = wp_get_attachment_image_src( $imgID['id'], 'full', true);
@@ -22,7 +22,7 @@ class rsimple_media{
 		?>
 		<div class="rsimple-media">
 			<div class="rsimple-target">
-				<?php 
+				<?php
 				if(isset($imgID['id']) && isset($img[0])){
 					?>
 					<img src="<?php echo $img[0]; ?>">
@@ -32,7 +32,7 @@ class rsimple_media{
 				} ?>
 			</div>
 			<a class="button button-primary media-upload-btn" data-name="<?php echo $this->fieldArgs['name']; ?>">Upload/Edit</a>&nbsp;
-			<a class="button button-danger media-remove-btn">Remove</a> 
+			<a class="button button-danger media-remove-btn">Remove</a>
 			<small class="desc"><?php echo $this->fieldArgs['desc']; ?></small>
 		</div>
 		<?php

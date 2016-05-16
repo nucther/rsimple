@@ -15,7 +15,7 @@
 			var this_value = $(this).val();
 			this_value = this_value.replace('/','-').replace('.','-');			
 
-			//console.log('test'+ this_value);
+			console.log('test'+ this_value);
 
 			$(document).find('.rsimple-condition-page').hide();
 			$(document).find('.rsimple-'+ this_value).show();
